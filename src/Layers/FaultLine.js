@@ -5,8 +5,6 @@ import GeoJSON from "ol/format/GeoJSON";
 
 const FaultLayers = () => {
   const style = createRStyle()
-  console.log('render fault layer')
-
 
   return (
     <RLayerVector
