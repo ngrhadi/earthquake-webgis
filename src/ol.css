@@ -1,6 +1,6 @@
 :root,
 :host {
-  --ol-background-color: rgb(48, 48, 48);
+  --ol-background-color: #303030;
   --ol-accent-background-color: #F5F5F5;
   --ol-subtle-background-color: rgba(255, 255, 255, 0.25);
   --ol-partial-background-color: rgba(255, 255, 255, 0.75);

@@ -6,8 +6,8 @@ import { fromLonLat } from 'ol/proj';
 import { createRStyle } from 'rlayers/style';
 import { RFeature, RLayerVector, RStyle } from 'rlayers';
 
-const Earthquake = ({ setCenterMap, setLayers }) => {
-  const { eqLayer, isLoading, isStale } = useBmkg()
+const Earthquake = ({ setCenterMap, setLayers, eqLayer, isStale, isLoading }) => {
+
   const data = eqLayer?.features
   const eqFeatures = Object.keys(data ?? {}).map(
     (key) =>
@@ -86,13 +86,13 @@ const Earthquake = ({ setCenterMap, setLayers }) => {
 
           <RStyle.RStyle ref={style} zIndex={val.get('depth') ? val.get('depth') + 15 : 5}>
             <RStyle.RCircle
-              radius={parseInt(val.get('mag')) > 5.5 ? parseInt(val.get('mag')) + 5
-                : parseInt(val.get('mag')) > 3.5 ? val.get('mag') + 4
-                  : parseInt(val.get('mag')) > 2 ? val.get('mag') + 2 : val.get('mag') + 1}>
-              <RStyle.RFill color={val.get('depth') > 1000 ? 'purple'
-                : val.get('depth') > 500 ? 'green'
-                  : val.get('depth') > 100 ? 'yellow'
-                    : val.get('depth') > 30 ? 'blue' :
+              radius={parseFloat(val.get('mag')) > 7 ? parseFloat(val.get('mag')) + 5
+                : parseFloat(val.get('mag')) > 6 ? parseFloat(val.get('mag')) + 4
+                  : parseFloat(val.get('mag')) > 5.5 ? parseFloat(val.get('mag')) + 2 : 4}>
+              <RStyle.RFill color={parseFloat(val.get('depth')) > 1000 ? 'purple'
+                : parseFloat(val.get('depth')) > 500 ? 'green'
+                  : parseFloat(val.get('depth')) > 100 ? 'yellow'
+                    : parseFloat(val.get('depth')) > 30 ? 'blue' :
                       'red'} />
               <RStyle.RStroke color="#2cb5db" width={1} />
             </RStyle.RCircle>

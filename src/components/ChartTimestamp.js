@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { TimeSeries } from 'pondjs';
+import { TimeSeries, percentile } from 'pondjs';
 import {
   Resizable,
   Charts,
@@ -8,13 +8,13 @@ import {
   YAxis,
   LineChart,
   ScatterChart,
-  // styler,
+  styler,
+  BandChart,
 } from 'react-timeseries-charts';
 import moment from 'moment';
 import useBmkg from '../hooks/useBmkg';
 import Up from '../icons/Up';
 import Down from '../icons/Down';
-
 
 export const Baselines = ({
   features,
@@ -50,6 +50,7 @@ export const Baselines = ({
         setLoadingGlob(false);
       }, 500);
     }
+    console.log(highlight?.event?.get(highlight.column === 'depth'), "depth")
     const magValue = highlight?.event
       .get(highlight.column)
       .toFixed(2)
@@ -66,7 +67,9 @@ export const Baselines = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [series, setTimerange, timerange]);
 
-  const infoValue = [{ label: 'Magnitude', value: dataHover.mag }];
+  const infoValue = [
+    { label: 'Magnitude', value: dataHover.mag }
+  ];
 
   const escFunction = useCallback((event) => {
     if (event.key === 'Escape') {
@@ -83,7 +86,6 @@ export const Baselines = ({
   }, [escFunction]);
 
 
-
   return (
     <>
       {showGraph === true ? (
@@ -95,18 +97,21 @@ export const Baselines = ({
               onBackgroundClick={setSelection}
               onTimeRangeChanged={setTimerange}
               timeAxisStyle={axisStyle}
-              // trackerInfoValues={infoValue}
-              // trackerInfoWidth={225}
-              // trackerInfoHeight={30}
+              trackerInfoValues={infoValue}
+              trackerInfoWidth={225}
+              trackerInfoHeight={30}
             >
               <ChartRow height="250">
                 <YAxis
                   style={axisStyle}
                   id="mag"
-                  label="mag"
+                  type="linear"
+                  label="magnitude"
                   min={series?.min()}
                   max={series?.max() + 1}
-                  width="60"
+                  // max={series?.max() + 1000}
+                  width="30"
+                  labelOffset={60}
                 />
                 <Charts>
                   <ScatterChart
@@ -114,30 +119,101 @@ export const Baselines = ({
                     axis="mag"
                     columns={['value']}
                     series={series}
-                    style={style1}
+                    style={(event, column) => ({
+                      normal: {
+                        fill: column === "value" ? "blue" : "orange",
+                        opacity: 0.8
+                      },
+                      highlighted: {
+                        fill: column === "value" ? "blue" : "orange",
+                        stroke: "white",
+                        opacity: 1.0
+                      },
+                      selected: { fill: "none", stroke: "#2db3d1", opacity: 1.0 },
+                      muted: {
+                        stroke: "none",
+                        opacity: 0.4,
+                        fill: column === "value" ? "blue" : "orange"
+                      }
+                    })}
+                    // style={style1}
                     info={infoValue}
-                    infoHeight={28}
+                    infoHeight={30}
                     infoWidth={125}
-                    format=".1f"
+                    // format=".1f"
                     selected={selection}
                     // onSelectionChange={(d) => handleSelections(d)}
                     onMouseNear={(d) => handleNearby(d)}
                     highlight={highlight}
-                    radius={(event, column) => (column === 'value' ? 3 : 2)}
+                    radius={(event, column) => {
+                      return column === 'value' ? 5 : 0;
+                    }}
                   />
-                  <LineChart
-                    interpolation="curveCardinal"
+
+                  {/* <ScatterChart
+                    interpolation=""
+                    axis="mag"
+                    columns={['depth']}
+                    series={series}
+                    style={(event, column) => ({
+                      normal: {
+                        fill: column === "depth" ? "green" : "blue",
+                        opacity: 0.8
+                      },
+                      highlighted: {
+                        fill: column === "depth" ? "green" : "blue",
+                        stroke: "white",
+                        opacity: 1.0
+                      },
+                      selected: { fill: "none", stroke: "#2db3d1", opacity: 1.0 },
+                      muted: {
+                        stroke: "none",
+                        opacity: 0.4,
+                        fill: column === "depth" ? "green" : "blue"
+                      }
+                    })}
+                    info={infoValue}
+                    infoHeight={30}
+                    infoWidth={125}
+                    // format=".1f"
+                    selected={selection}
+                    // onSelectionChange={(d) => handleSelections(d)}
+                    onMouseNear={(d) => handleNearby(d)}
+                    highlight={highlight}
+                    radius={(event, column) => {
+                      return column === 'depth' ? 5 : 0;
+                    }}
+                  /> */}
+                  {/* <LineChart
+                    interpolation="curveLinear"
                     axis="mag"
                     series={series}
-                    style={style2}
-                  />
+                    column={['depth']}
+                    style={(event, column) => ({
+                      normal: {
+                        fill: column === "value" ? "green" : "green",
+                        opacity: 0.3
+                      },
+                      highlighted: {
+                        fill: column === "value" ? "green" : "green",
+                        stroke: "none",
+                        opacity: 1.0
+                      },
+                      selected: { fill: "none", stroke: "#2db3d1", opacity: 1.0 },
+                      muted: {
+                        stroke: "none",
+                        opacity: 0.4,
+                        fill: column === "value" ? "green" : "green"
+                      }
+                    })}
+                  /> */}
                 </Charts>
               </ChartRow>
             </ChartContainer>
           </Resizable>
           <div className="z-[800] absolute right-0 top-0 w-full px-6">
             <div className="flex justify-between">
-              <div className="relative inline-block text-left ml-14">
+              <div className="relative inline-block text-left ml-12">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                     <svg aria-hidden="true" className="w-4 h-4  text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -213,12 +289,13 @@ const TimestampMagnitude = ({ setLoadingGlob }) => {
 
   const series = new TimeSeries({
     name: 'Earthquake',
-    columns: ['time', 'value', 'place'],
+    columns: ['time', 'value', 'place', 'depth'],
     points: data
       ?.map((e) => [
         moment(e?.properties?.time),
         parseFloat(e?.properties?.mag),
         e?.properties?.place,
+        parseFloat(e?.properties?.depth)
       ])
       .reverse(),
   });
@@ -257,29 +334,14 @@ const TimestampMagnitude = ({ setLoadingGlob }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eqLayer]);
 
-  const style1 = {
-    value: {
-      stroke: '#fea71a',
-      // opacity: 0.1,
-      fill: 'red',
-    },
-    place: {
-      stroke: '#fea71a',
-      opacity: 0.1,
-      fill: 'red',
-    },
-    highlighted: {
-      fill: '#fea71a',
-      stroke: 'none',
-      opacity: 1.0,
-    },
-    selected: {
-      fill: 'none',
-      stroke: '#fea71a',
-      strokeWidth: 3,
-      opacity: 1.0,
-    },
-  };
+  const color = '#9a9a9a'
+  const highlightColor = '#000000'
+
+  const style1 = styler([
+    { key: "value", color: "orange" },
+    { key: "out", color: "blue" }
+  ]);
+
 
   const style2 = {
     value: {
@@ -305,7 +367,7 @@ const TimestampMagnitude = ({ setLoadingGlob }) => {
   };
 
   const axisStyle = {
-    labels: { labelColor: 'Red', labelWeight: 100, labelSize: 13, backgroundColor: '#fea71a' },
+    labels: { labelColor: 'Red', labelWeight: 100, labelSize: 13 },
     axis: { axisColor: 'orange' },
   };
 

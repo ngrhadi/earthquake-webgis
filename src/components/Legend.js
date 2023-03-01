@@ -64,33 +64,33 @@ const Legend = ({ layers, eqView, setEqView, setFaultView, faultView }) => {
                 </div>
                 <div className="flex flex-col justify-start w-full place-items-start">
                   <p className="text-sm font-light">Mag Value</p>
-                  <div className="flex flex-row w-full">
+                  <div className="flex flex-row w-full align-middle">
                     <div className="flex flex-col w-16 justify-center place-items-center">
                       <div className="flex flex-row my-1">
-                        <div className="rounded-full w-5 h-5 bg-white border-black border mr-1"></div>
+                        <div className="rounded-full w-[1.3rem] h-[1.3rem] bg-white border-black border mr-1"></div>
                       </div>
                       <div className="flex flex-row my-1">
                         <div className="rounded-full w-4 h-4 bg-white border-black border mr-1"></div>
                       </div>
                       <div className="flex flex-row my-1">
-                        <div className="rounded-full w-3 h-3 bg-white border-black border mr-1"></div>
+                        <div className="rounded-full w-[0.8rem] h-[0.8rem] bg-white border-black border mr-1"></div>
                       </div>
                       <div className="flex flex-row my-1">
-                        <div className="rounded-full w-2 h-2 bg-white border-black border mr-1"></div>
+                        <div className="rounded-full w-[0.6rem] h-[0.6rem] bg-white border-black border mr-1"></div>
                       </div>
                     </div>
                     <div className="flex flex-col w-full justify-center place-items-start">
                       <div className="flex flex-row my-1">
+                        <p className="text-xs font-light mr-2">{'> 7m'}</p>
+                      </div>
+                      <div className="flex flex-row my-1">
+                        <p className="text-xs font-light mr-2">{'> 6m'}</p>
+                      </div>
+                      <div className="flex flex-row my-1">
                         <p className="text-xs font-light mr-2">{'> 5.5m'}</p>
                       </div>
                       <div className="flex flex-row my-1">
-                        <p className="text-xs font-light mr-2">{'> 3.5m'}</p>
-                      </div>
-                      <div className="flex flex-row my-1">
-                        <p className="text-xs font-light mr-2">{'> 2m'}</p>
-                      </div>
-                      <div className="flex flex-row my-1">
-                        <p className="text-xs font-light mr-2">{'< 2m'}</p>
+                        <p className="text-xs font-light mr-2">{'<= 5.5m'}</p>
                       </div>
                     </div>
                   </div>

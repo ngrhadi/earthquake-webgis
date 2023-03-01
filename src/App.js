@@ -6,10 +6,12 @@ import { EqMemo } from './Layers/Earthquake';
 import { FaultMemo } from './Layers/FaultLine';
 import Legend from './components/Legend';
 import TimestampMagnitude from './components/ChartTimestamp';
+import useBmkg from './hooks/useBmkg';
 
 const center = fromLonLat([119.8917871, 0.838468])
 
 function App() {
+  const { eqLayer, isLoading, isStale } = useBmkg()
   const mapRef = useRef(null);
   const [centerMap, setCenterMap] = useState({ center: center, zoom: 4.5 })
   const [layers, setLayers] = useState(null)
@@ -36,6 +38,9 @@ function App() {
       >
         {eqView && (
           <EqMemo
+            eqLayer={eqLayer}
+            isStale={isStale}
+            isLoading={isLoading}
           setCenterMap={setCenterMap}
           setLayers={setLayers}
           />
