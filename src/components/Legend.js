@@ -1,17 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Hidden from '../icons/Hidden';
 import Expand from '../icons/Expand';
+import EyeTrue from '../icons/EyeTrue';
+import EyeFalse from '../icons/EyeFalse';
 
-const Legend = ({ layers }) => {
+const Legend = ({ layers, eqView, setEqView, setFaultView, faultView }) => {
   const [legendaShow, setLegendaShow] = useState(true);
   const [layerInfoShow, setLayerInfoShow] = useState(false);
+  const [layerList, setLayerList] = useState(false)
 
   const escFunction = useCallback((event) => {
     if (event.key === "Escape") {
       setLegendaShow(false)
       setLayerInfoShow(false)
+      setLayerList(false)
     }
   }, [])
+
+  const handleFaultView = () => setFaultView(!faultView)
+  const handleEqView = () => setEqView(!eqView)
 
   useEffect(() => {
     document.addEventListener("keydown", escFunction, false);
@@ -26,8 +33,8 @@ const Legend = ({ layers }) => {
       <div className="absolute top-2 w-56 right-2 z-50">
         <div className="flex flex-row flex-wrap justify-end">
           {legendaShow ? (
-            <div className="bg-white w-full h-44 rounded-md">
-              <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2">
+            <div className="bg-zinc-800/90 text-white w-full h-44 rounded-md">
+              <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2 bg-zinc-800/90">
                 <p className="text-base font-bold">Depth / Magnitude</p>
                 <button onKeyDown={(e) => escFunction(e)} onClick={() => setLegendaShow(!legendaShow)}>
                   <Hidden />
@@ -39,7 +46,7 @@ const Legend = ({ layers }) => {
                   <div className="flex flex-col">
                     <div className="flex flex-row my-1 align-middle">
                       <div className="rounded-full w-5 h-5 bg-red-600 mr-2"></div>
-                      <p className="text-xs font-light mr-2">{'< 50km'}</p>
+                      <p className="text-xs font-light mr-2">{'< 30km'}</p>
                     </div>
                     <div className="flex flex-row my-1">
                       <div className="rounded-full w-5 h-5 bg-blue-600 mr-2"></div>
@@ -91,7 +98,7 @@ const Legend = ({ layers }) => {
               </div>
             </div>
           ) : (
-            <div className="bg-white w-full rounded-md">
+              <div className="bg-zinc-800/90 text-gray-300 w-full rounded-md">
               <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2">
                 <p className="text-base font-bold">Depth / Magnitude</p>
                 <button onClick={() => setLegendaShow(!legendaShow)}>
@@ -102,37 +109,69 @@ const Legend = ({ layers }) => {
           )}
 
           {layerInfoShow ? (
-            <div className="bg-white w-full h-56 overflow-x-auto rounded-md mt-1">
-              <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2 pt-2 sticky top-0 bg-white">
+            <div className="bg-zinc-800/90 text-white w-full h-56 overflow-x-auto rounded-md mt-1">
+              <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2 pt-2 sticky top-0 bg-zinc-800/90">
                 <p className="text-base font-bold">Layer Info</p>
                 <button onKeyDown={(e) => escFunction(e)} onClick={() => setLayerInfoShow(!layerInfoShow)}>
                   <Hidden />
                 </button>
               </div>
-              <div className="p-2 flex">
+              <div className="p-2 flex w-full flex-col">
                 {layers?.target.values_.place.length > 0 && (
                   <>
-                  <p className="text-base min-w-[40%] max-w-[40%] font-medium">
+                  <p className="text-base font-medium">
                   {layers?.target.values_.place}
                 </p>
                 <p className="text-base font-thin">
-                  {layers?.target.values_.id}
+                  Id: {layers?.target.values_.id}
                   <br />
-                  {layers?.target.values_.mag} m
+                  mag: {layers?.target.values_.mag} m
                   <br />
-                  {layers?.target.values_.depth} km
+                      depth: {layers?.target.values_.depth} km
                   <br />
-                  {layers?.target.values_.time}
+                  timestamp: {layers?.target.values_.time}
                     </p>
                   </>
                   )}
               </div>
             </div>
           ) : (
-            <div className="bg-white w-full rounded-md mt-1">
+              <div className="bg-zinc-800/90 text-gray-300 w-full rounded-md mt-1">
               <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2">
                   <p className="text-base font-bold">Layer Info</p>
                 <button onClick={() => setLayerInfoShow(!layerInfoShow)}>
+                  <Expand />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {layerList ? (
+            <div className="bg-zinc-800/90 text-white w-full h-56 overflow-x-auto rounded-md mt-1">
+              <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2 pt-2 sticky top-0 bg-zinc-800/90">
+                <p className="text-base font-bold">Layer List</p>
+                <button onKeyDown={(e) => escFunction(e)} onClick={() => setLayerList(!layerList)}>
+                  <Hidden />
+                </button>
+              </div>
+              <div className="p-2 flex w-full flex-row justify-between align-middle text-justify">
+                <p className='text-base font-normal'>Earthquakes Layer</p>
+                <button onClick={handleEqView}>
+                {eqView ? <EyeTrue /> : <EyeFalse />}
+                </button>
+              </div>
+              <div className="p-2 flex w-full flex-row justify-between align-middle text-justify">
+                <p className='text-base font-normal'>Faults Layer</p>
+                <button onClick={handleFaultView}>
+                {faultView ? <EyeTrue /> : <EyeFalse />}
+                </button>
+              </div>
+            </div>
+          ) : (
+              <div className="bg-zinc-800/90 text-gray-300 w-full rounded-md mt-1">
+              <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2">
+                  <p className="text-base font-bold">Layer List</p>
+                  <button onClick={() => setLayerList(!layerList)}>
                   <Expand />
                 </button>
               </div>

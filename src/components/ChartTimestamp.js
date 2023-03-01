@@ -15,11 +15,6 @@ import useBmkg from '../hooks/useBmkg';
 import Up from '../icons/Up';
 import Down from '../icons/Down';
 
-const region = [
-  { label: 'North Sumatra', value: 'Northern Sumatra'},
-  { label: 'Southern Sumatra', value: 'Southern Sumatra'},
-  { label: 'Southwest of Sumatra & Sumba', value: 'Southern Sumatra'},
-]
 
 export const Baselines = ({
   features,
@@ -36,6 +31,7 @@ export const Baselines = ({
   style2,
   setLoadingGlob,
   handleChangeFilter,
+  fillters,
   openFilter,
   setOpenFilter,
   handleSelectRegion
@@ -109,7 +105,7 @@ export const Baselines = ({
                   id="mag"
                   label="mag"
                   min={series?.min()}
-                  max={series?.max() + 0.1}
+                  max={series?.max() + 1}
                   width="60"
                 />
                 <Charts>
@@ -130,7 +126,7 @@ export const Baselines = ({
                     radius={(event, column) => (column === 'value' ? 3 : 2)}
                   />
                   <LineChart
-                    interpolation="curveStepBefore"
+                    interpolation="curveCardinal"
                     axis="mag"
                     series={series}
                     style={style2}
@@ -140,10 +136,14 @@ export const Baselines = ({
             </ChartContainer>
           </Resizable>
           <div className="z-[800] absolute right-0 top-0 w-full px-6">
-            <div className="flex justify-end">
-              <div class="relative inline-block text-left">
-                <div>
-                  <button
+            <div className="flex justify-between">
+              <div className="relative inline-block text-left ml-14">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                    <svg aria-hidden="true" className="w-4 h-4  text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  </div>
+                  <input type="search" id="default-search" className="inline-flex w-52 py-1 my-2 pl-8 text-sm text-gray-200 border rounded-lg bg-zinc-800" placeholder="Search By Region" required onChange={handleChangeFilter} value={fillters}></input>
+                  {/* <button
                     type="button"
                     className="w-40 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none  focus:ring-offset-gray-100"
                     id="menu-button"
@@ -151,41 +151,26 @@ export const Baselines = ({
                     aria-haspopup="true"
                     onClick={() => setOpenFilter(!openFilter)}
                   >
-                    Sort by Region
-                    <svg
-                      className="-mr-1 ml-2 h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
+                    Search by Region
+
+                  </button> */}
                 </div>
-                {openFilter && (
-                <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                    <div className="py-1 max-h-36 min-h-36 overflow-y-auto" role="none">
-                      {features.map(val => (
-                        <option className="text-gray-700 block px-4 py-2 text-sm hover:cursor-pointer" role="menuitem"
-                          value={val?.properties?.place}
-                          onClick={handleSelectRegion}
-                          onChange={handleChangeFilter} key={val.properties.id}>{val.properties.place}
-                        </option>
-                      ))}
-                    <form method="POST" action="#" role="none">
-                      <button type="submit" className="text-gray-700 block w-full px-4 py-2 text-left text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
-                    </form>
-                  </div>
-                </div>
-                )}
+
+                  {/* // <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+                  //     <div className="py-1 max-h-36 min-h-36 max-w-20 min-w-20 overflow-y-auto overflow-x-hidden " role="none">
+                  //       {features.map(val => (
+                  //         <option className="  p-1 text-gray-700 px-4 py-2 text-sm hover:cursor-pointer" role="menuitem"
+                  //           value={val?.properties?.place}
+                  //           onClick={handleSelectRegion}
+                  //           onChange={handleChangeFilter} key={val.properties.id}>{val.properties.place}
+                  //         </option>
+                  //       ))}
+                  //   </div>
+                  // </div> */}
               </div>
 
               <button
-                className="flex p-1 bg-blue-300 text-white rounded-sm -mr-5"
+                className="flex justify-center align-middle max-h-7 p-1 bg-transparent text-white rounded-sm -mr-5"
                 onKeyDown={(e) => escFunction(e)}
                 onClick={() => setShowGraph(!showGraph)}
               >
@@ -197,7 +182,7 @@ export const Baselines = ({
       ) : (
         <div className="w-full">
           <button
-            className="z-[800] rounded-md flex ml-2 absolute bottom-3 bg-white p-3 shadow-md shadow-black/20"
+            className="z-[800] rounded-md flex ml-2 absolute bottom-3 bg-zinc-800 text-gray-100 p-3 shadow-md shadow-black/20"
             onClick={() => setShowGraph(!showGraph)}
           >
             <Up />
@@ -209,9 +194,22 @@ export const Baselines = ({
   );
 };
 
-export const TimestampMagnitude = ({ setLoadingGlob }) => {
+const TimestampMagnitude = ({ setLoadingGlob }) => {
   const { eqLayer } = useBmkg();
   const [data, setData] = useState([]);
+  const [fillters, setFillers] = useState("")
+  const [dataFilter, setDataFilter] = useState([])
+  const [optionFilter, setOptionFilter] = useState([])
+
+  useEffect(() => {
+    if (fillters?.length > 1) {
+      setData(dataFilter)
+    } else {
+      setData(data)
+    }
+    return () => {};
+  }, [dataFilter]);
+
 
   const series = new TimeSeries({
     name: 'Earthquake',
@@ -224,24 +222,35 @@ export const TimestampMagnitude = ({ setLoadingGlob }) => {
       ])
       .reverse(),
   });
+
   const [timerange, setTimerange] = useState(series?.timerange());
   const [openFilter, setOpenFilter] = useState(false);
 
   // const [seriesValue, setSeriesValue] = useState(series.timerange())
-  const handleSelectRegion = (event) => {
+  const handleSelectRegion = useCallback((event) => {
     // const [value, name ] = event.target;
-    console.log(event.target.value);
+
+    const dataSort = data?.filter(val => val.properties.place.toLowerCase().includes(event?.target.value.toLowerCase()))
+    if (event?.target.value === 0) return;
+    setDataFilter(dataSort)
     setOpenFilter(false)
-  }
+    return fillters
+  }, [data, fillters])
+
+  useEffect(() => {
+    handleSelectRegion()
+    return () => { };
+  }, []);
 
   const handleChangeFilter = (event) => {
-    const { value, name } = event.target;
-    console.log(name, value);
+    event.preventDefault();
+    setFillers(event.target.value);
   }
 
   useEffect(() => {
     if (eqLayer) {
       setData(eqLayer?.features);
+      setOptionFilter(eqLayer?.features)
       setTimerange(series?.timerange());
     }
     return () => {};
@@ -250,23 +259,23 @@ export const TimestampMagnitude = ({ setLoadingGlob }) => {
 
   const style1 = {
     value: {
-      stroke: '#a02c2c',
-      opacity: 0.1,
+      stroke: '#fea71a',
+      // opacity: 0.1,
       fill: 'red',
     },
     place: {
-      stroke: '#a02c2c',
+      stroke: '#fea71a',
       opacity: 0.1,
       fill: 'red',
     },
     highlighted: {
-      fill: '#FEA71A',
+      fill: '#fea71a',
       stroke: 'none',
       opacity: 1.0,
     },
     selected: {
       fill: 'none',
-      stroke: '#2CB1CF',
+      stroke: '#fea71a',
       strokeWidth: 3,
       opacity: 1.0,
     },
@@ -274,35 +283,34 @@ export const TimestampMagnitude = ({ setLoadingGlob }) => {
 
   const style2 = {
     value: {
-      stroke: '#FEA71A',
+      stroke: '#fea71a',
       opacity: 0.2,
+      fill: '#fea71a',
     },
     place: {
-      stroke: '#FEA71A',
+      stroke: '#fea71a',
       opacity: 0.2,
     },
     highlighted: {
-      fill: '#FEA71A',
+      fill: '#fea71a',
       stroke: 'none',
       opacity: 1.0,
     },
     selected: {
       fill: 'none',
-      stroke: '#2CB1CF',
+      stroke: '#fea71a',
       strokeWidth: 3,
       opacity: 1.0,
     },
   };
 
   const axisStyle = {
-    labels: { labelColor: 'Red', labelWeight: 100, labelSize: 13 },
-    axis: { axisColor: 'Orange' },
+    labels: { labelColor: 'Red', labelWeight: 100, labelSize: 13, backgroundColor: '#fea71a' },
+    axis: { axisColor: 'orange' },
   };
 
   const [selection, setSelection] = useState([]);
   const [highlight, setHighlight] = useState(null);
-  // const [hover, setHover] = useState(null)
-  // const [tracker, setTracker] = useState(null)
 
   const handleSelections = (data) => {
     setSelection(data);
@@ -314,14 +322,14 @@ export const TimestampMagnitude = ({ setLoadingGlob }) => {
 
   return (
     <div className="absolute bottom-0 w-full left-0 z-50">
+      <div className='px-2 bg-zinc-800'>
       <div
-        className="canvas_chart"
+          className="canvas_chart pt-2 bg-zinc-800"
         style={{
           minWidth: '100%',
           maxWidth: '100%',
           overflowX: 'scroll',
-          backgroundColor: 'white',
-          padding: '15px 0',
+          paddingTop: '20px',
         }}
       >
         <Baselines
@@ -329,7 +337,7 @@ export const TimestampMagnitude = ({ setLoadingGlob }) => {
           setLoadingGlob={setLoadingGlob}
           setTimerange={setTimerange}
           series={series}
-          features={data}
+          features={optionFilter}
           axisStyle={axisStyle}
           style1={style1}
           style2={style2}
@@ -338,12 +346,16 @@ export const TimestampMagnitude = ({ setLoadingGlob }) => {
           highlight={highlight}
           handleSelections={handleSelections}
           handleNearby={handleNearby}
-          handleChangeFilter={handleChangeFilter}
+            handleChangeFilter={handleChangeFilter}
+            fillters={fillters}
           openFilter={openFilter}
           setOpenFilter={setOpenFilter}
           handleSelectRegion={handleSelectRegion}
         />
+        </div>
       </div>
     </div>
   );
 };
+
+export default React.memo(TimestampMagnitude)

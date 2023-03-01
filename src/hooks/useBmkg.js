@@ -1,20 +1,16 @@
+import axios from 'axios';
+import { useState } from 'react';
 import { useQuery } from 'react-query'
 
-const now = Date.now().toString()
-
-// function addMinutes(date, minutes) {
-//   return new Date(date.getTime() + minutes * 60000);
-// }
-
-const fetchEqDataBMKG = async () => {
-  return await fetch(`https://bmkg-content-inatews.storage.googleapis.com/histori.json?t=${now}`).then((res) => res.json()).catch(e => e.message);
-};
 
 const useBmkg = () => {
+  const [date, setDate] = useState(new Date())
+
   const { data: eqLayer, isLoading, isError, isStale } = useQuery(['routerLayer'],
-    fetchEqDataBMKG,
+    async () => await axios.get(`https://bmkg-content-inatews.storage.googleapis.com/histori.json?t=${date}`).then((res) => {
+      return res.data
+    }).catch(e => e.message),
     {
-      enabled: true,
       cacheTime: 60 * 60 * 1000,
       // staleTime: 60 * 60 * 1000,
       refetchOnWindowFocus: false,
@@ -22,7 +18,10 @@ const useBmkg = () => {
       // refetchInterval: 600000,
     }
   )
+
   if (isError) return
+
+  // console.log(eqLayer, "Data")
 
   return {
     eqLayer, isLoading, isStale

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'ol/ol.css';
+import './ol.css';
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -20,6 +20,7 @@ root.render(
   // <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
+    {/* <ReactQueryDevtools/> */}
     </QueryClientProvider>
   // </React.StrictMode>
 );

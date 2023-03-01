@@ -92,7 +92,7 @@ const Earthquake = ({ setCenterMap, setLayers }) => {
               <RStyle.RFill color={val.get('depth') > 1000 ? 'purple'
                 : val.get('depth') > 500 ? 'green'
                   : val.get('depth') > 100 ? 'yellow'
-                    : val.get('depth') > 50 ? 'blue' :
+                    : val.get('depth') > 30 ? 'blue' :
                       'red'} />
               <RStyle.RStroke color="#2cb5db" width={1} />
             </RStyle.RCircle>

@@ -3,7 +3,7 @@ import React from 'react';
 const Up = () => {
   return (
     <svg
-      className="h-6 w-6 text-black "
+      className="h-6 w-6 text-white hover:text-zinc-700/20"
       width="24"
       height="24"
       viewBox="0 0 24 24"
@@ -14,7 +14,7 @@ const Up = () => {
       strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" />
-      <path d="M18 15l-6-6l-6 6h12" fill="black" />
+      <path d="M18 15l-6-6l-6 6h12" fill="white" />
     </svg>
   );
 };

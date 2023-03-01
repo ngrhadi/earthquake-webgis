@@ -1,5 +1,5 @@
 import React from 'react';
-import { RMap, RLayerTile, RInteraction } from 'rlayers';
+import { RMap, RLayerTile, RInteraction, RControl } from 'rlayers';
 
 export default function MapRender(props) {
 
@@ -20,10 +20,16 @@ export default function MapRender(props) {
         <RLayerTile
           useInterimTilesOnError={true}
           url='https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=NmKEEIDmEwt6rI3LKtQV'
-          attributions='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a>'
+          attributions='this site created by
+          <a href="https://ngrhadi.web.app" target="_blank">&copy; Developer</a>, tile service using
+          <a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a>, make with 😁'
           className="-z-0"
         />
         {props.children}
+        <RControl.RFullScreen />
+        <RControl.RScaleLine />
+        <RControl.RAttribution />
+        <RControl.RZoom />
       </RMap>
 
     </div>

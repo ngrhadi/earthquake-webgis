@@ -5,20 +5,27 @@ import { fromLonLat} from 'ol/proj';
 import { EqMemo } from './Layers/Earthquake';
 import { FaultMemo } from './Layers/FaultLine';
 import Legend from './components/Legend';
-import { TimestampMagnitude } from './components/ChartTimestamp';
+import TimestampMagnitude from './components/ChartTimestamp';
 
-const center = fromLonLat([117.3917871, -3.838468])
+const center = fromLonLat([119.8917871, 0.838468])
 
 function App() {
   const mapRef = useRef(null);
-  const [centerMap, setCenterMap] = useState({ center: center, zoom: 4.2 })
+  const [centerMap, setCenterMap] = useState({ center: center, zoom: 4.5 })
   const [layers, setLayers] = useState(null)
   const [loadingGlob, setLoadingGlob] = useState(false)
+  const [eqView, setEqView] = useState(true)
+  const [faultView, setFaultView] = useState(true)
 
 
   return (
     <>
-      <Legend layers={layers} />
+      <Legend layers={layers}
+        setFaultView={setFaultView}
+        faultView={faultView}
+        setEqView={setEqView}
+        eqView={eqView}
+      />
       <TimestampMagnitude setLoadingGlob={setLoadingGlob} />
       <MapRender
         setLoadingGlob={setLoadingGlob}
@@ -27,11 +34,15 @@ function App() {
         zoom={12}
         mapRef={mapRef}
       >
-        <EqMemo
+        {eqView && (
+          <EqMemo
           setCenterMap={setCenterMap}
           setLayers={setLayers}
-        />
-        <FaultMemo />
+          />
+        )}
+        {faultView && (
+          <FaultMemo />
+        )}
 
       </MapRender>
       {loadingGlob === true && (

@@ -3,7 +3,7 @@ import React from 'react';
 const Down = () => {
   return (
     <svg
-      className="h-6 w-6 text-white"
+      className="h-6 w-6 text-white  hover:text-zinc-700/20"
       width="24"
       height="24"
       viewBox="0 0 24 24"
