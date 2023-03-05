@@ -4,21 +4,32 @@ import Expand from '../icons/Expand';
 import EyeTrue from '../icons/EyeTrue';
 import EyeFalse from '../icons/EyeFalse';
 
-const Legend = ({ layers, eqView, setEqView, setFaultView, faultView }) => {
+const Legend = ({ layers,
+  eqView,
+  setEqView, setFaultView,
+  faultView, selectedFromTime,
+  forceInfoLayer, setForceInfoLayer
+}) => {
   const [legendaShow, setLegendaShow] = useState(true);
-  const [layerInfoShow, setLayerInfoShow] = useState(false);
   const [layerList, setLayerList] = useState(false)
 
   const escFunction = useCallback((event) => {
     if (event.key === "Escape") {
       setLegendaShow(false)
-      setLayerInfoShow(false)
+      setForceInfoLayer(false)
       setLayerList(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleFaultView = () => setFaultView(!faultView)
-  const handleEqView = () => setEqView(!eqView)
+  const handleEqView = () => {
+    setEqView(!eqView)
+  }
+  const handleLayerInfo = () => {
+    // setLayerInfoShow(!layerInfoShow)
+    setForceInfoLayer(!forceInfoLayer)
+  }
 
   useEffect(() => {
     document.addEventListener("keydown", escFunction, false);
@@ -90,7 +101,7 @@ const Legend = ({ layers, eqView, setEqView, setFaultView, faultView }) => {
                         <p className="text-xs font-light mr-2">{'> 5.5m'}</p>
                       </div>
                       <div className="flex flex-row my-1">
-                        <p className="text-xs font-light mr-2">{'<= 5.5m'}</p>
+                        <p className="text-xs font-light mr-2">{'5-5.5m'}</p>
                       </div>
                     </div>
                   </div>
@@ -108,16 +119,16 @@ const Legend = ({ layers, eqView, setEqView, setFaultView, faultView }) => {
             </div>
           )}
 
-          {layerInfoShow ? (
+          {forceInfoLayer ? (
             <div className="bg-zinc-800/90 text-white w-full h-56 overflow-x-auto rounded-md mt-1">
               <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2 pt-2 sticky top-0 bg-zinc-800/90">
                 <p className="text-base font-bold">Layer Info</p>
-                <button onKeyDown={(e) => escFunction(e)} onClick={() => setLayerInfoShow(!layerInfoShow)}>
+                <button onKeyDown={(e) => escFunction(e)} onClick={handleLayerInfo}>
                   <Hidden />
                 </button>
               </div>
               <div className="p-2 flex w-full flex-col">
-                {layers?.target.values_.place.length > 0 && (
+                {layers?.target.values_.place.length > 0 ? (
                   <>
                   <p className="text-base font-medium">
                   {layers?.target.values_.place}
@@ -132,14 +143,29 @@ const Legend = ({ layers, eqView, setEqView, setFaultView, faultView }) => {
                   timestamp: {layers?.target.values_.time}
                     </p>
                   </>
-                  )}
+                ) : selectedFromTime !== null ? (
+                  <>
+                    <p className="text-base font-medium">
+                      {selectedFromTime[0].properties.place}
+                    </p>
+                    <p className="text-base font-thin">
+                      Id: {selectedFromTime[0].properties.id}
+                      <br />
+                      mag: {selectedFromTime[0].properties.mag} m
+                      <br />
+                      depth: {selectedFromTime[0].properties.depth} km
+                      <br />
+                      timestamp: {selectedFromTime[0].properties.time}
+                    </p>
+                  </>
+                ) : (null)}
               </div>
             </div>
           ) : (
               <div className="bg-zinc-800/90 text-gray-300 w-full rounded-md mt-1">
               <div className="flex flex-row justify-between align-middle place-items-center h-8 p-2">
                   <p className="text-base font-bold">Layer Info</p>
-                <button onClick={() => setLayerInfoShow(!layerInfoShow)}>
+                  <button onClick={handleLayerInfo}>
                   <Expand />
                 </button>
               </div>

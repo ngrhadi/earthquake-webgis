@@ -1,5 +1,5 @@
 import React from 'react';
-import { RMap, RLayerTile, RInteraction, RControl } from 'rlayers';
+import { RMap, RInteraction, RControl, ROSM } from 'rlayers';
 
 export default function MapRender(props) {
 
@@ -17,14 +17,15 @@ export default function MapRender(props) {
           )
         }}
       >
-        <RLayerTile
+        <ROSM />
+        {/* <RLayerTile
           useInterimTilesOnError={true}
           url='https://api.maptiler.com/maps/streets-v2-light/{z}/{x}/{y}.png?key=NmKEEIDmEwt6rI3LKtQV'
           attributions='this site created by
           <a href="https://ngrhadi.web.app" target="_blank">&copy; Developer</a>, tile service using
           <a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a>, make with 😁'
           className="-z-0"
-        />
+        /> */}
         {props.children}
         <RControl.RFullScreen />
         <RControl.RScaleLine />

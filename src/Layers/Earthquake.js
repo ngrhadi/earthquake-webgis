@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
-import useBmkg from '../hooks/useBmkg';
 import { Feature } from 'ol';
 import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import { createRStyle } from 'rlayers/style';
 import { RFeature, RLayerVector, RStyle } from 'rlayers';
 
-const Earthquake = ({ setCenterMap, setLayers, eqLayer, isStale, isLoading }) => {
+const Earthquake = ({ setCenterMap, setLayers,
+  eqLayer,
+  isStale, isLoading,
+  setForceInfoLayer
+}) => {
 
   const data = eqLayer?.features
   const eqFeatures = Object.keys(data ?? {}).map(
@@ -106,6 +109,7 @@ const Earthquake = ({ setCenterMap, setLayers, eqLayer, isStale, isLoading }) =>
                 maxZoom: 7
               })
               setLayers(e)
+              setForceInfoLayer(true)
             }}
           >
           </RFeature>

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import MapRender from './MapRender';
 import { fromLonLat} from 'ol/proj';
@@ -7,6 +7,8 @@ import { FaultMemo } from './Layers/FaultLine';
 import Legend from './components/Legend';
 import TimestampMagnitude from './components/ChartTimestamp';
 import useBmkg from './hooks/useBmkg';
+import { Feature } from 'ol';
+import { Point } from 'ol/geom';
 
 const center = fromLonLat([119.8917871, 0.838468])
 
@@ -18,17 +20,55 @@ function App() {
   const [loadingGlob, setLoadingGlob] = useState(false)
   const [eqView, setEqView] = useState(true)
   const [faultView, setFaultView] = useState(true)
+  const [indexLayerTime, setIndexLayerTime] = useState(null)
+  const [selectedFromTime, setSelectedFromTime] = useState(null)
+  const [forceInfoLayer, setForceInfoLayer] = useState(false)
 
+  useEffect(() => {
+    let layer = eqLayer?.features
+    if (indexLayerTime !== null && indexLayerTime !== undefined) {
+      // console.log(new Date(indexLayerTime).toString(), "from apppp")
+      const filterDateLayer = layer.filter(t => new Date(t.properties.time).toString().includes(new Date(indexLayerTime).toString()))
+      setSelectedFromTime(filterDateLayer)
+      const feature = new Feature({
+        geometry: new Point(fromLonLat([filterDateLayer[0].geometry.coordinates[0], filterDateLayer[0].geometry.coordinates[1]])),
+      });
+      const extent = feature.getGeometry().getExtent();
+      const extendZoom = mapRef.current?.ol.getView().animate({
+        duration: 1000,
+        // easing: inAndOut(0),
+        zoom: 5,
+        center: extent,
+      }, {
+        duration: 2000,
+        // easing: inAndOut(0),
+        zoom: 10,
+        center: extent,
+      })
+      setForceInfoLayer(true)
+      return extendZoom;
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [indexLayerTime]);
 
   return (
     <>
-      <Legend layers={layers}
+      <Legend
+        layers={layers}
         setFaultView={setFaultView}
         faultView={faultView}
         setEqView={setEqView}
+        selectedFromTime={selectedFromTime}
         eqView={eqView}
+        forceInfoLayer={forceInfoLayer}
+        setForceInfoLayer={setForceInfoLayer}
       />
-      <TimestampMagnitude setLoadingGlob={setLoadingGlob} />
+      <TimestampMagnitude
+        eqLayer={eqLayer}
+        setIndexLayerTime={setIndexLayerTime}
+        setLoadingGlob={setLoadingGlob}
+      />
       <MapRender
         setLoadingGlob={setLoadingGlob}
         centerMap={centerMap}
@@ -42,7 +82,8 @@ function App() {
             isStale={isStale}
             isLoading={isLoading}
           setCenterMap={setCenterMap}
-          setLayers={setLayers}
+            setLayers={setLayers}
+            setForceInfoLayer={setForceInfoLayer}
           />
         )}
         {faultView && (
