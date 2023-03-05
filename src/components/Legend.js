@@ -7,11 +7,18 @@ import EyeFalse from '../icons/EyeFalse';
 const Legend = ({ layers,
   eqView,
   setEqView, setFaultView,
-  faultView, selectedFromTime,
+  faultView,
   forceInfoLayer, setForceInfoLayer
 }) => {
   const [legendaShow, setLegendaShow] = useState(true);
-  const [layerList, setLayerList] = useState(false)
+  const [layerList, setLayerList] = useState(false);
+  const [legenLayer, setLegenLayer] = useState({
+    place: "",
+    id: "",
+    mag: "",
+    depth: "",
+    time: "",
+  })
 
   const escFunction = useCallback((event) => {
     if (event.key === "Escape") {
@@ -38,6 +45,51 @@ const Legend = ({ layers,
       document.removeEventListener("keydown", escFunction, false);
     };
   }, [escFunction]);
+
+  // const renderInfoLayer = useCallback(() => {
+
+
+  // }, [layers, selectedFromTime])
+
+  // if (layers !== null ?? selectedFromTime !== null) {
+
+  //   // setLegenLayer({
+  //   //   place: layers?.target.values_.place,
+  //   //   id: layers?.target.values_.id,
+  //   //   mag: layers?.target.values_.mag,
+  //   //   depth: layers?.target.values_.depth,
+  //   //   time: layers?.target.values_.time
+  //   // })
+  //   // if (layers?.target.values_.place.length !== 0) {
+
+  //   //   console.log("qwqweqwe")
+  //   // } else {
+  //   //   console.log("gegeg")
+  //   // }
+  // }
+  useEffect(() => {
+    if (layers) {
+      if (layers[0] !== undefined) {
+        setLegenLayer({
+          id: layers[0].properties.id,
+          place: layers[0].properties.place,
+          time: layers[0].properties.time,
+          mag: layers[0].properties.mag,
+          depth: layers[0].properties.depth,
+        })
+      } else {
+        setLegenLayer({
+          id: layers?.target.values_.id,
+          place: layers?.target.values_.place,
+          time: layers?.target.values_.time,
+          mag: layers?.target.values_.mag,
+          depth: layers?.target.values_.depth,
+        })
+      }
+    }
+    // if (layers ?? selectedFromTime) {
+    // if (!layers ?? selectedFromTime !== null) return;
+  }, [layers]);
 
   return (
     <>
@@ -128,22 +180,39 @@ const Legend = ({ layers,
                 </button>
               </div>
               <div className="p-2 flex w-full flex-col">
-                {layers?.target.values_.place.length > 0 ? (
+                {legenLayer ? (
                   <>
-                  <p className="text-base font-medium">
-                  {layers?.target.values_.place}
-                </p>
-                <p className="text-base font-thin">
-                  Id: {layers?.target.values_.id}
-                  <br />
-                  mag: {layers?.target.values_.mag} m
-                  <br />
-                      depth: {layers?.target.values_.depth} km
-                  <br />
-                  timestamp: {layers?.target.values_.time}
+                    <p className="text-base font-medium">
+                      {legenLayer.place}
+                    </p>
+                    <p className="text-base font-thin">
+                      Id: {legenLayer.id}
+                      <br />
+                      mag: {legenLayer.mag} m
+                      <br />
+                      depth: {legenLayer.depth} km
+                      <br />
+                      timestamp: {legenLayer.time}
                     </p>
                   </>
-                ) : selectedFromTime !== null ? (
+                ) : null}
+                {/* {layers?.target.values_.place.length > 0 ? (
+                  <>
+                    <p className="text-base font-medium">
+                      {layers?.target.values_.place}
+                    </p>
+                    <p className="text-base font-thin">
+                      Id: {layers?.target.values_.id}
+                      <br />
+                      mag: {layers?.target.values_.mag} m
+                      <br />
+                      depth: {layers?.target.values_.depth} km
+                      <br />
+                      timestamp: {layers?.target.values_.time}
+                    </p>
+                  </>
+                ) : (null)}
+                {selectedFromTime ? (
                   <>
                     <p className="text-base font-medium">
                       {selectedFromTime[0].properties.place}
@@ -158,7 +227,7 @@ const Legend = ({ layers,
                       timestamp: {selectedFromTime[0].properties.time}
                     </p>
                   </>
-                ) : (null)}
+                ) : (null)} */}
               </div>
             </div>
           ) : (

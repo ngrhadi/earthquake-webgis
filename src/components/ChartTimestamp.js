@@ -40,7 +40,8 @@ export const Baselines = ({
   setOpenFilter,
   totalLayer,
   selectMagnitudeValue,
-  setSelectMagnitudeValue
+  setSelectMagnitudeValue,
+  setLayers
 }) => {
   const [showGraph, setShowGraph] = useState(false);
   const [dataHover, setDataHover] = useState({
@@ -96,18 +97,16 @@ export const Baselines = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [escFunction]);
 
-  console.log(selectMagnitudeValue)
-
   return (
     <>
       {showGraph === true ? (
         <div className="w-full">
           <Resizable>
             <ChartContainer
-              timeRange={timerange2}
+              timeRange={timerange}
               enablePanZoom={true}
               onBackgroundClick={setSelection}
-              onTimeRangeChanged={setTimerange2}
+              onTimeRangeChanged={setTimerange}
               timeAxisStyle={axisStyle}
             >
               <ChartRow height="250">
@@ -116,32 +115,53 @@ export const Baselines = ({
                   id="mag"
                   type="linear"
                   label="point: magnitude - line: depth/40"
-                  min={series2?.min()}
-                  max={series2?.max()}
+                  min={-0}
+                  max={series?.max() + 5}
                   // max={series?.max() + 1000}
                   width="30"
                   labelOffset={60}
                 />
                 <Charts>
+                  {/* <Baseline
+                    axis="mag"
+                    style={{ stroke: 'white', opacity: 1.0, }}
+                    value={series2.max()}
+                    label="Max Depth"
+                    position="right"
+                  />
                   <Baseline
                     axis="mag"
                     style={{ stroke: 'white', opacity: 1.0, }}
+                    value={series2.min()}
+                    label="Min Depth"
+                    position="right"
+                  />
+                  <Baseline
+                    axis="mag"
+                    style={{ stroke: 'white', opacity: 1.0, }}
+                    value={series2.avg()}
+                    label="Avg Depth"
+                    position="right"
+                  /> */}
+                  <Baseline
+                    axis="mag"
+                    style={{ stroke: 'red', opacity: 1.0, }}
                     value={series.max()}
-                    label="Max"
+                    label="Max Magnitude"
                     position="right"
                   />
                   <Baseline
                     axis="mag"
-                    style={{ stroke: 'white', opacity: 1.0, }}
+                    style={{ stroke: 'red', opacity: 1.0, }}
                     value={series.min()}
-                    label="Min"
+                    label="Min Magnitude"
                     position="right"
                   />
                   <Baseline
                     axis="mag"
-                    style={{ stroke: 'white', opacity: 1.0, }}
+                    style={{ stroke: 'red', opacity: 1.0, }}
                     value={series.avg()}
-                    label="Avg"
+                    label="Avg Magnitude"
                     position="right"
                   />
                   <ScatterChart
@@ -183,6 +203,7 @@ export const Baselines = ({
                         <RContext.Consumer>
                           <button onClick={() => {
                             handleSelections(d)
+                            setLayers(null)
                           }}></button>
                         </RContext.Consumer>
                       )
@@ -295,6 +316,7 @@ const TimestampMagnitude = ({
   eqLayer,
   setIndexLayerTime,
   mapRef,
+  setLayers,
 }) => {
   const [data, setData] = useState([]);
   const [fillters, setFillers] = useState('');
@@ -425,6 +447,7 @@ const TimestampMagnitude = ({
             series2={series2}
             features={optionFilter}
             axisStyle={axisStyle}
+            setLayers={setLayers}
             selection={selection}
             setSelection={setSelection}
             highlight={highlight}

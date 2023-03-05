@@ -8,7 +8,8 @@ import { RFeature, RLayerVector, RStyle } from 'rlayers';
 const Earthquake = ({ setCenterMap, setLayers,
   eqLayer,
   isStale, isLoading,
-  setForceInfoLayer
+  setForceInfoLayer,
+  mapRef
 }) => {
 
   const data = eqLayer?.features
@@ -71,8 +72,8 @@ const Earthquake = ({ setCenterMap, setLayers,
             geometry={new Point(fromLonLat([e?.geometry?.coordinates[0], e?.geometry?.coordinates[1]]))}
             onClick={(e) => {
               e.map.getView().fit(e.target.getGeometry().getExtent(), {
-                duration: 300,
-                maxZoom: 7
+                duration: 2000,
+                minZoom: mapRef.current?.ol.getZoom(20)
               })
               setLayers(e)
             }}
@@ -106,7 +107,7 @@ const Earthquake = ({ setCenterMap, setLayers,
             onClick={(e) => {
               e.map.getView().fit(e.target.getGeometry().getExtent(), {
                 duration: 300,
-                maxZoom: 7
+                maxZoom: 10
               })
               setLayers(e)
               setForceInfoLayer(true)
