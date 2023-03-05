@@ -45,7 +45,6 @@ function App() {
       const extent = feature.getGeometry().getExtent();
       let prevExtent = extent;
       setForceInfoLayer(true);
-      setTimeout(() => {
         if (prevExtent[1] === extent[1]) {
           const extendZoom = mapRef.current?.ol.getView().animate(
             {
@@ -63,7 +62,6 @@ function App() {
           );
           return extendZoom;
         }
-      }, 1000);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
