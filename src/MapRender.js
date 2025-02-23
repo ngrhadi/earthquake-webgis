@@ -23,7 +23,7 @@ export default function MapRender(props) {
           useInterimTilesOnError={true}
           url='https://api.maptiler.com/maps/streets-v2-light/{z}/{x}/{y}.png?key=NmKEEIDmEwt6rI3LKtQV'
           attributions='this site created by
-          <a href="https://ngrhadi.web.app" target="_blank">&copy; Developer</a>, tile service using
+          <a href="https://ngrhadi.web.id" target="_blank">&copy; Developer</a>, tile service using
           <a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a>, build with <a href="https://openlayers.org/" target="_blank">&copy; OpenLayers</a>'
           className="-z-0"
         />
